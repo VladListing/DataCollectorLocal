@@ -1,15 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DataCollector.Local.PC
 {
-    class Program
+    internal class Program
     {
-        private static void Main()
+        private static void Main(string[] args)
         {
-            
-
-
-
+               var informationDisks = new InformationDisks();
+            informationDisks.ScanningDisks();
         }
     }
 }
