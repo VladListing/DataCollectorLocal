@@ -1,4 +1,12 @@
-﻿CREATE TABLE [dbo].[Table]
+﻿CREATE TABLE [dbo].[TableInfoDisks]
 (
-	[Id] INT NOT NULL PRIMARY KEY
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(), 
+    [localDateTime] DATETIME NULL, 
+    [MachineName] TEXT NULL, 
+    [DriveName] TEXT NULL, 
+    [DriveType] TEXT NULL, 
+    [VolumeLabel] TEXT NULL, 
+    [DriveFormat] TEXT NULL, 
+    [DriveTotalSize] REAL NULL, 
+    [DriveTotalFreeSize] REAL NULL
 )
