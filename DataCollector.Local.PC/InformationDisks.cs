@@ -13,8 +13,6 @@ namespace DataCollector.Local.PC
 {
     internal class InformationDisks
     {
-        
-
         private DateTime _localDateTime = DateTime.Now;
 
         private string _machineName;
@@ -73,10 +71,7 @@ namespace DataCollector.Local.PC
 
                     Console.WriteLine();
                 }
-
-
                 
-
                 // Create a new row.
                 //DataBaseDataSet.TableInfoDisksRow newTableInfoDisksRow;
                 // newTableInfoDisksRow = dataBaseDataSet.TableInfoDisks.NewTableInfoDisksRow();
