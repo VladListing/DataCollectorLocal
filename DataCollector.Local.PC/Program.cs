@@ -10,8 +10,8 @@ namespace DataCollector.Local.PC
     {
         private static void Main(string[] args)
         {
-               var informationDisks = new InformationDisks();
-            informationDisks.ScanningDisks();
+            var informationDisks = new InformationDisks();
+            informationDisks.Timer();
         }
     }
 }
