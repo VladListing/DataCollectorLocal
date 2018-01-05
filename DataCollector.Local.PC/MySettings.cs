@@ -7,8 +7,9 @@ using NLog;
 
 namespace DataCollector.Local.PC
 {
-    class MySettings : Settings<MySettings>
+    class MySettings
     {
-        public string PachBd = null;
+        public string PachBd { get; set; } = null;
+        public int Interval { get; set; }
     }
 }

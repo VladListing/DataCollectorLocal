@@ -1,20 +1,28 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.IO;
 using NLog;
-using System;
+using NPoco;
 
-namespace DataCollector.Local.PC
+namespace DataCollector.Local.PC.DAL
 {
-    internal class CreateBd
+    class DbFactory : IDbFactory
     {
-        public void Init()
+        private readonly MySettings _settings;
+
+        public DbFactory(MySettings settings)
+        {
+            _settings = settings;
+            Init();
+        }
+
+        private void Init()
         {
             try
             {
-                var settings = MySettings.Load();
-                var path = settings.PachBd;
+                var path = _settings.PachBd;
 
                 if (!File.Exists(path))
                 {
@@ -32,7 +40,7 @@ namespace DataCollector.Local.PC
                     {
                         command.CommandText =
 
-                      @"CREATE TABLE IF NOT EXISTS DisksPc(Id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                            @"CREATE TABLE IF NOT EXISTS DisksPc(Id INTEGER PRIMARY KEY AUTOINCREMENT, 
                       localDateTime TEXT(10), 
                       MachineName TEXT(10), 
                       DriveName TEXT(10), 
@@ -49,9 +57,20 @@ namespace DataCollector.Local.PC
             }
             catch (Exception ex)
             {
-                var logger = LogManager.GetCurrentClassLogger();
-                logger.Error(ex.Message);
+                var logger = LogManager.GetLogger(nameof(DbFactory));
+                logger.Error(ex, "Db initialization error");
+                throw;
             }
+        }
+
+        public IDatabase CreateDatabase()
+        {
+            return new Database(ConnectionString(), DatabaseType.SQLite);
+        }
+
+        private string ConnectionString()
+        {
+            return $"Data Source={_settings.PachBd}; Version=3;";
         }
     }
 }
