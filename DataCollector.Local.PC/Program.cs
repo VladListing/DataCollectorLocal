@@ -24,7 +24,7 @@ namespace DataCollector.Local.PC
             }
             catch (Exception ex)
             {
-                logger.Error(ex.Message);
+                logger.Error(ex);
             }
             
             Console.ReadKey(true);

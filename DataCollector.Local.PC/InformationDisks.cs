@@ -22,10 +22,21 @@ namespace DataCollector.Local.PC
 
         public void Timer()
         {
-            var mTimer = new Timer { Interval = _settings.Interval }; 
-            mTimer.Elapsed += ScanningDisks;
-            mTimer.AutoReset = true;
-            mTimer.Enabled = true;
+            try
+            {
+
+                var mTimer = new Timer {Interval = _settings.Interval};
+                mTimer.Elapsed += ScanningDisks;
+                mTimer.AutoReset = true;
+                mTimer.Enabled = true;
+
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "metod Timer() error");
+            }
+
+
         }
         
         private void ScanningDisks(object sender, ElapsedEventArgs e)
@@ -49,7 +60,7 @@ namespace DataCollector.Local.PC
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "Disks scanning error");
+                Logger.Error(ex, "metod ScanningDisk() error");
             }
         }
 
