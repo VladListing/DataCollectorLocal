@@ -24,6 +24,12 @@ namespace DataCollector.Local.PC.DAL
             {
                 var path = _settings.PachBd;
 
+                if (File.Exists(path))
+                {
+                    //SQLiteConnection.(path);
+                    File.Delete(path);
+                }
+
                 if (!File.Exists(path))
                 {
                     SQLiteConnection.CreateFile(path);
@@ -42,7 +48,8 @@ namespace DataCollector.Local.PC.DAL
 
                             @"CREATE TABLE IF NOT EXISTS DisksPc(Id INTEGER PRIMARY KEY AUTOINCREMENT, 
                       localDateTime TEXT(10), 
-                      MachineName TEXT(10), 
+                      MachineName TEXT(10),
+                      Session INT(10),
                       DriveName TEXT(10), 
                       DriveType TEXT(10), 
                       VolumeLabel TEXT(10), 

@@ -8,6 +8,8 @@ namespace DataCollector.Local.PC
     {
         private static void Main()
         {
+            Console.SetWindowSize(150, 50);
+
             var logger = LogManager.GetCurrentClassLogger();
             logger.Trace("program start");
 
@@ -20,7 +22,7 @@ namespace DataCollector.Local.PC
             
                 var informationDisks = new InformationDisks(settings, repository);
                 informationDisks.Timer();
-
+                informationDisks.TimerSelectionForTheServer();
             }
             catch (Exception ex)
             {

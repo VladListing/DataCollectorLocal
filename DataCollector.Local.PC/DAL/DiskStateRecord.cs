@@ -10,6 +10,7 @@ namespace DataCollector.Local.PC.DAL
         [Column("localDateTime")]
         public DateTime DateTime { get; set; }
         public string MachineName { get; set; }
+        public int Session { get; set; }
         public string DriveName { get; set; }
         public string DriveType { get; set; }
         public string VolumeLabel { get; set; }

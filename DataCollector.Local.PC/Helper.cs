@@ -7,11 +7,12 @@ namespace DataCollector.Local.PC
     static class Helper
     {
         const double MBdivider = 1048576.0;
-        public static DiskStateRecord ToDiskStateRecord(this DriveInfo driveInfo)
+        public static DiskStateRecord ToDiskStateRecord(this DriveInfo driveInfo, int s)
         {
             var result = new DiskStateRecord();
             result.DateTime = DateTime.Now;
             result.MachineName = Environment.MachineName;
+            result.Session = s;
             result.DriveName = driveInfo.Name;
             result.DriveType = driveInfo.DriveType.ToString();
             result.VolumeLabel = driveInfo.VolumeLabel;

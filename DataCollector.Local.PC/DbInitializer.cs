@@ -34,7 +34,8 @@ namespace DataCollector.Local.PC
                         command.CommandText =
 
                       @"CREATE TABLE IF NOT EXISTS DisksPc(Id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                      localDateTime TEXT(10), 
+                      localDateTime TEXT(10),
+                      Session INT(10),
                       MachineName TEXT(10), 
                       DriveName TEXT(10), 
                       DriveType TEXT(10), 
