@@ -4,7 +4,6 @@ using System.Timers;
 using DataCollector.Local.PC.DAL;
 using NLog;
 using NPoco;
-using System.Collections.Generic;
 
 namespace DataCollector.Local.PC
 {
@@ -86,16 +85,14 @@ namespace DataCollector.Local.PC
 
         private void SelectionToSend(object sender, ElapsedEventArgs e)
         {
-            //List<DiskStateRecord> selectionLastSession;
-
+            
             try
             {
                 var path = _settings.PachBd;
 
                 using (IDatabase db = new Database($"Data Source={path}; Version=3;", DatabaseType.SQLite))
                 {
-                    var selectionLastSession = db.Query<DiskStateRecord>().Where(x => x.Session == _counterSession)
-                        .ToList();
+                    var selectionLastSession = db.Query<DiskStateRecord>().Where(x => x.Session == _counterSession).ToList();
 
                     //for testing
                     foreach (DiskStateRecord c in selectionLastSession)
