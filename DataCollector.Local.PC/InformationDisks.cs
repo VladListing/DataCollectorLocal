@@ -4,6 +4,10 @@ using System.Timers;
 using DataCollector.Local.PC.DAL;
 using NLog;
 using NPoco;
+using System.Net;
+using System.Text;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DataCollector.Local.PC
 {
@@ -53,7 +57,22 @@ namespace DataCollector.Local.PC
             }
         }
 
-        
+        //метод конвертации из LIST в Byte[]
+        public byte[] ConvertListTobyteArray(List<DiskStateRecord> obj){
+
+            Encoding encode = Encoding.ASCII;
+
+            List<byte> listByte = new List<byte>();
+            string[] ResultCollectionArray = obj.Select(i => i.ToString()).ToArray<string>();
+
+            foreach (var item in ResultCollectionArray)
+            {
+                foreach (byte b in encode.GetBytes(item))
+                    listByte.Add(b);
+            }
+            return listByte.ToArray();
+        }
+
 
 
         private void ScanningDisks(object sender, ElapsedEventArgs e)
@@ -92,8 +111,10 @@ namespace DataCollector.Local.PC
 
                 using (IDatabase db = new Database($"Data Source={path}; Version=3;", DatabaseType.SQLite))
                 {
-                    var selectionLastSession = db.Query<DiskStateRecord>().Where(x => x.Session == _counterSession).ToList();
+                    var selectionLastSession = db.Query<DiskStateRecord> ().Where(x => x.Session == _counterSession).ToList();
 
+                    Logger.Info("selected records to send to the server:" + e.SignalTime);
+                    
                     //for testing
                     foreach (DiskStateRecord c in selectionLastSession)
                     {
@@ -109,13 +130,51 @@ namespace DataCollector.Local.PC
                         Console.Write(" " + c.FreeSize);
                         Console.WriteLine();
                     }
+
+                    //попытка отправка на сервер
+                    byte[] postData = ConvertListTobyteArray(selectionLastSession);
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://192.168.56.2:8080");
+                    request.Method = "POST";
+                    request.ContentLength = postData.Length;
+                    Console.WriteLine("количество в массиве:" +postData.Length);
+                    //using (var writer = new StreamWriter(request.GetRequestStream(), Encoding.UTF8))
+                    using (var stream = request.GetRequestStream())
+                    {
+                        stream.Write(postData, 0, postData.Length);
+                    }
+                    Logger.Info("данные отправленны на сервер через запрос POST:" + e.SignalTime);
+
+
+
+
+
+
+
+
+                    //using (WebClient client = new WebClient())
+                    //{
+                    //    //var reqparm = new System.Collections.Specialized.NameValueCollection();
+                    //    //reqparm.Add("param1", "<any> kinds & of = ? strings");
+                    //    //reqparm.Add("param2", "escaping is already handled");
+
+
+                    //    //byte[] responsebytes = client.UploadValues("http://localhost", "POST", reqparm);
+
+                    //    //client.UploadData("http://127.0.0.1:8080", "POST", selectionLastSession);
+
+                    //    //string responsebody = Encoding.UTF8.GetString(responsebytes);
+                    //}
+
+                    //MyHttpClient myHttpClient = new MyHttpClient();
+                    //myHttpClient.SendingData();
+
                 }
 
-                Logger.Info("selected records to send to the server:" + e.SignalTime);
+                
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "metod GetSelectionToSend() error");
+                Logger.Error(ex, "metod SelectionToSend() error");
             }
 
         }

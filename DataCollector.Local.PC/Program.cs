@@ -15,6 +15,10 @@ namespace DataCollector.Local.PC
 
             try
             {
+
+
+
+
                 var settings = SettingsLoader<MySettings>.Load();
 
                 IDbFactory dbFactory = new DbFactory(settings);
