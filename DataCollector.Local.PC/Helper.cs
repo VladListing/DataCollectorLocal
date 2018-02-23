@@ -12,7 +12,6 @@ namespace DataCollector.Local.PC
             var result = new DiskStateRecord();
             result.DateTime = DateTime.Now;
             result.MachineName = Environment.MachineName;
-            result.Session = s;
             result.DriveName = driveInfo.Name;
             result.DriveType = driveInfo.DriveType.ToString();
             result.VolumeLabel = driveInfo.VolumeLabel;

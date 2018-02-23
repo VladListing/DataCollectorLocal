@@ -49,13 +49,13 @@ namespace DataCollector.Local.PC.DAL
                             @"CREATE TABLE IF NOT EXISTS DisksPc(Id INTEGER PRIMARY KEY AUTOINCREMENT, 
                       localDateTime TEXT(10), 
                       MachineName TEXT(10),
-                      Session INT(10),
                       DriveName TEXT(10), 
                       DriveType TEXT(10), 
                       VolumeLabel TEXT(10), 
                       DriveFormat TEXT(10), 
                       DriveTotalSize REAL(10, 1), 
-                      DriveTotalFreeSize REAL(10, 1))";
+                      DriveTotalFreeSize REAL(10, 1),
+                      IsArchived BOOLEAN NOT NULL)";
 
                         command.CommandType = CommandType.Text;
                         command.ExecuteNonQuery();

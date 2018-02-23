@@ -1,6 +1,7 @@
 ﻿using NLog;
 using System;
 using DataCollector.Local.PC.DAL;
+using DataCollector.Local.PC.Services;
 
 namespace DataCollector.Local.PC
 {
@@ -15,16 +16,13 @@ namespace DataCollector.Local.PC
 
             try
             {
-
-
-
-
                 var settings = SettingsLoader<MySettings>.Load();
 
                 IDbFactory dbFactory = new DbFactory(settings);
                 IRepository repository = new Repository(dbFactory);
+                ISender sender = new Sender(settings);
             
-                var informationDisks = new InformationDisks(settings, repository);
+                var informationDisks = new InformationDisks(settings, sender, repository);
                 informationDisks.Timer();
                 informationDisks.TimerSelectionForTheServer();
             }
