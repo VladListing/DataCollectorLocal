@@ -7,6 +7,7 @@ using NPoco;
 using System.Net;
 using System.Text;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace DataCollector.Local.PC
@@ -131,18 +132,72 @@ namespace DataCollector.Local.PC
                         Console.WriteLine();
                     }
 
-                    //попытка отправка на сервер
-                    byte[] postData = ConvertListTobyteArray(selectionLastSession);
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://192.168.56.2:8080");
-                    request.Method = "POST";
-                    request.ContentLength = postData.Length;
-                    Console.WriteLine("количество в массиве:" +postData.Length);
-                    //using (var writer = new StreamWriter(request.GetRequestStream(), Encoding.UTF8))
-                    using (var stream = request.GetRequestStream())
+
+                    //запаковка List в бинарный файл
+                    try
                     {
-                        stream.Write(postData, 0, postData.Length);
+
+                        File.WriteAllText(@"lastSession.txt", string.Empty);
+
+                        //создание экземпляра BinaryWriter (запись  в бинарный файл)
+                        using (BinaryWriter writer = new BinaryWriter(File.Open(@"lastSession.txt", FileMode.OpenOrCreate)))// открывает поток для записи  в файл
+                        {
+                            foreach (DiskStateRecord t in selectionLastSession)
+                            {
+                                writer.Write(t.Id);
+                                writer.Write(value: Convert.ToString(t.DateTime, CultureInfo.InvariantCulture));
+                                writer.Write(t.MachineName);
+                                writer.Write(t.Session);
+                                writer.Write(t.DriveName);
+                                writer.Write(t.DriveType);
+                                writer.Write(t.VolumeLabel);
+                                writer.Write(t.DriveFormat);
+                                writer.Write(t.TotalSize);   
+                                writer.Write(t.FreeSize);
+                            }
+                           
+                        }
+                        Logger.Info("данные последней сессии добавлены в бинарный файл");
                     }
-                    Logger.Info("данные отправленны на сервер через запрос POST:" + e.SignalTime);
+
+                    //вывод сообщения о возновении исключения
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex, "metod BinaryWriter error");
+                    }
+
+
+
+                    //попытка отправки List на сервер
+                    //byte[] postData = ConvertListTobyteArray(selectionLastSession);
+                    //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:8080");
+                    //request.Method = "POST";
+                    //request.ContentLength = postData.Length;
+                    //Console.WriteLine("количество в массиве:" + postData.Length);
+                    ////using (var writer = new StreamWriter(request.GetRequestStream(), Encoding.UTF8))
+                    //using (var stream = request.GetRequestStream())
+                    //{
+                    //    foreach (DiskStateRecord t in selectionLastSession)
+                    //    {
+                    //        stream.Write(postData, 0, postData.Length);
+                    //    }
+                    //}
+                    //Logger.Info("данные отправленны на сервер через запрос POST:" + e.SignalTime);
+
+
+
+                    ////попытка отправка на сервер
+                    //byte[] postData = ConvertListTobyteArray(selectionLastSession);
+                    //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:8080");
+                    //request.Method = "POST";
+                    //request.ContentLength = postData.Length;
+                    //Console.WriteLine("количество в массиве:" +postData.Length);
+                    ////using (var writer = new StreamWriter(request.GetRequestStream(), Encoding.UTF8))
+                    //using (var stream = request.GetRequestStream())
+                    //{
+                    //    stream.Write(postData, 0, postData.Length);
+                    //}
+                    //Logger.Info("данные отправленны на сервер через запрос POST:" + e.SignalTime);
 
 
 
@@ -151,7 +206,16 @@ namespace DataCollector.Local.PC
 
 
 
-                    //using (WebClient client = new WebClient())
+                    using (WebClient client = new WebClient())
+                    {
+                        byte[] responseArray = client.UploadFile("http://127.0.0.1:8080", "POST", @"lastSession.txt");
+
+                       //Console.WriteLine("\nResponse Received.The contents of the file uploaded are:\n{0}",
+                           // System.Text.Encoding.ASCII.GetString(responseArray));
+                    }
+
+
+
                     //{
                     //    //var reqparm = new System.Collections.Specialized.NameValueCollection();
                     //    //reqparm.Add("param1", "<any> kinds & of = ? strings");
